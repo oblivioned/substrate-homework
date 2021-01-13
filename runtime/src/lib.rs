@@ -40,6 +40,7 @@ pub use frame_support::{
 
 /// Import the poe pallet.
 pub use pallet_poe;
+pub use pallet_kitties;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -132,7 +133,6 @@ parameter_types! {
 }
 
 // Configure FRAME pallets to include in runtime.
-
 impl frame_system::Trait for Runtime {
 	/// The basic call filter to use in dispatchable.
 	type BaseCallFilter = ();
@@ -266,6 +266,12 @@ impl pallet_poe::Trait for Runtime {
 	type Event = Event;
 }
 
+impl pallet_kitties::Trait for Runtime {
+	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
+	type KittyIndex = u32;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -283,6 +289,7 @@ construct_runtime!(
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the poe pallet in the runtime.
 		PoeModule: pallet_poe::{Module, Call, Storage, Event<T>},
+		KittiesModule: pallet_kitties::{Module, Call, Storage, Event<T>},
 	}
 );
 
